@@ -1,0 +1,371 @@
+/* App.css */
+
+/* Reset some defaults */
+body, html, #root {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  text-align: center;
+}
+
+/* Container for overall page */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px 40px 16px;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 0;
+}
+
+.logo {
+  font-weight: bold;
+  font-size: 24px;
+  color: #2966f1;
+}
+
+.create-btn {
+  background-color: #2966f1;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  padding: 10px 24px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.create-btn:hover {
+  background-color: #1e4bb8;
+}
+
+/* Hero Section */
+.hero h2 {
+  font-size: 22px;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.hero h1 {
+  font-size: 36px;
+  margin: 4px 0 12px 0;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.highlight {
+  color: #2966f1;
+}
+
+.hero p {
+  font-size: 15px;
+  color: #555;
+  margin: 8px 0;
+}
+/* 
+Search Box in Hero */
+.search-box {
+  margin: 20px 0;
+  display: flex;
+  max-width: 320px;
+  
+}
+/* 
+.search-box input[type="text"] {
+  flex-grow: 1;
+  padding: 9px 12px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-right: none;
+  border-radius: 4px 0 0 4px;
+  outline: none;
+  transition: border-color 0.3s ease;
+} */
+
+.search-box input[type="text"]:focus {
+  border-color: #2966f1;
+}
+
+.search-box button {
+  padding: 10px 22px;
+  background-color: #2966f1;
+  color: white;
+  border: none;
+  border-radius: 0 4px 4px 0;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.search-box button:hover {
+  background-color: #1e4bb8;
+}
+
+/* Partner Logos */
+.logos {
+  margin: 25px 0;
+  display: flex;
+  justify-content: center;
+  gap:55px
+}
+
+.logos img {
+  height: 32px;
+  margin-right: 18px;
+  object-fit: contain;
+}
+
+.logos img:last-child {
+  margin-right: 0;
+}
+
+/* Courses Section */
+.courses h2 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.courses p {
+  font-size: 14px;
+  margin-bottom: 15px;
+  color: #666;
+}
+
+.course-grid {
+  display: flex;
+  gap: 50px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.course-card {
+  width: 210px;
+  border: 1px solid #ececec;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px #eee;
+  background-color: white;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.course-card:hover {
+  box-shadow: 0 5px 15px rgba(41, 102, 241, 0.3);
+  transform: translateY(-4px);
+}
+
+.course-card img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.course-card h3 {
+  font-weight: 600;
+  font-size: 18px;
+  padding: 6px 12px 15px 12px;
+  margin: 0;
+  color: #222;
+}
+
+/* LMS Style Course List Section Title */
+.course-list-breadcrumbs {
+  display: flex;
+  align-items: center;
+  margin-bottom: 7px;
+  font-size: 14px;
+  color: #888;
+}
+
+.course-list-breadcrumbs span {
+  color: #444;
+  margin-left: 3px;
+}
+
+.course-list-title {
+  font-size: 29px;
+  font-weight: 700;
+  margin: 0 0 14px 0;
+}
+
+/* LMS Search */
+/* .lms-search {
+  margin-left: auto;
+  margin-right: auto;
+  justify-content: center;
+} */
+
+/* 
+.lms-search input[type="text"] {
+  flex-grow: 1;
+  padding: 9px 12px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-right: none;
+  border-radius: 4px 0 0 4px;
+  outline: none;
+  transition: border-color 0.3s ease;
+} */
+/* 
+.lms-search input[type="text"]:focus {
+  border-color: #2966f1;
+    ;
+} */
+
+.lms-search button {
+  padding: 10px 24px;
+  background-color: #2966f1;
+  color: white;
+  border: none;
+  border-radius: 0 4px 4px 0;
+  font-weight: 700;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+}
+
+.lms-search button:hover {
+  background-color: #1e4bb8;
+}
+
+/* LMS Courses Grid */
+.lms-course-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-top: 20px; 
+}
+
+.lms-course-card {
+  width: 260px;
+  border: 1px solid #ececec;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px #eee;
+  background-color: white;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.lms-course-card:hover {
+  box-shadow: 0 5px 15px rgba(41, 102, 241, 0.3);
+  transform: translateY(-4px);
+}
+
+.lms-course-card img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.lms-course-card-content {
+  padding: 14px 16px;
+}
+
+.lms-course-title {
+  font-weight: 700;
+  font-size: 16px;
+  margin-bottom: 2px;
+  color: #222;
+}
+
+.lms-course-instructor {
+  font-size: 14px;
+  color: #888;
+  margin: 2px 0;
+}
+
+/* Star rating */
+.lms-course-rating {
+  display: flex;
+  align-items: center;
+  margin: 6px 0 2px 0;
+  font-size: 15px;
+  color: #fdba2c;
+}
+
+.lms-course-rating span {
+  color: #333;
+  margin-left: 5px;
+}
+
+.lms-course-rating small {
+  color: #bbb;
+  font-size: 13px;
+  margin-left: 6px;
+}
+
+/* Price styling */
+.lms-course-price {
+  color: #2966f1;
+  font-weight: 700;
+  font-size: 16px;
+  margin-top: 6px;
+}
+
+/* Responsive tweaks */
+@media (max-width: 960px) {
+  .course-grid {
+    justify-content: center;
+  }
+  .lms-course-grid {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .course-grid, .lms-course-grid {
+    flex-direction: column;
+    align-items: center;
+  }
+  .course-card, .lms-course-card {
+    width: 100%;
+    max-width: 320px;
+  }
+  .search-box, .lms-search {
+    max-width: 100%;
+  }
+}
+.modal-backdrop {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal {
+  background: #fff;
+  padding: 2rem 1.5rem;
+  border-radius: 8px;
+  min-width: 320px;
+  position: relative;
+  box-shadow: 0 2px 32px 0 rgba(0,0,0,0.20);
+}
+
+.modal-close {
+  position: absolute;
+  top: 10px; 
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  line-height: 1rem;
+  color: #555;
+  cursor: pointer;
+}

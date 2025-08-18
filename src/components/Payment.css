@@ -1,0 +1,76 @@
+/* Payment.css */
+.payment-container {
+  max-width: 500px;
+  margin: auto;
+  background: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.payment-container h1 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.payment-container p {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+}
+
+.payment-methods {
+  list-style: none;
+  padding: 0;
+}
+
+.payment-methods li {
+  margin-bottom: 0.8rem;
+}
+
+.payment-button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  background: #fff;
+  color: black;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.payment-button img {
+  width: 35px;
+  height: auto;
+}
+
+.payment-button:hover {
+  background: #f8f8f8;
+  border-color: #aaa;
+  transform: scale(1.02);
+}
+
+.payment-button:active {
+  transform: scale(0.98);
+}
+
+/* Specific Brand Styles */
+.payment-button.credit-card {
+  border-color: #0070ba;
+}
+
+.payment-button.paypal {
+  border-color: #003087;
+}
+
+.payment-button.google-pay {
+  border-color: #34a853;
+}
+
+.payment-button.upi {
+  border-color: #ff6f00;
+}
