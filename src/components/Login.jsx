@@ -1,83 +1,62 @@
 import React, { useState } from "react";
-import emailjs from "emailjs-com";
-import "./Login.css";
+import { useNavigate } from "react-router-dom";
 
-export default function Login({ onGoBack }) {
+function Login() {
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-
-    if (!email || !password) {
-      alert("❌ Please enter both email and password");
+  const handleLogin = () => {
+    if (!username.trim() || !email.trim() || !password.trim()) {
+      alert("Please fill all fields");
       return;
     }
 
-    try {
-      setLoading(true);
+    // Create or update user object
+    let allUsers = JSON.parse(localStorage.getItem("allUsers") || "{}");
+    const existing = allUsers[email];
 
-      await emailjs.send(
-        "service_pj6epu2",      
-        "template_mk8fxhd",     
-        {
-          to_email: email,      
-          message: `Hello ${email}, you have successfully logged in! 🎉`,
-        },
-        "HiUkx_TARNLGazlyw"      
-      );
+    const newUser = {
+      username,
+      email,
+      password,
+      purchasedCourses: existing?.purchasedCourses || [], // keep old purchases
+    };
 
-      alert(`✅ Login successful! Email sent to ${email}`);
-    } catch (err) {
-      console.error("Email sending error:", err);
-      alert("❌ Failed to send email");
-    } finally {
-      setLoading(false);
-      setEmail("");
-      setPassword("");
-    }
-  };
+    allUsers[email] = newUser;
 
-  const handleGoBack = () => {
-    setEmail("");
-    setPassword("");
-    onGoBack();
+    localStorage.setItem("allUsers", JSON.stringify(allUsers));
+    localStorage.setItem("currentUser", JSON.stringify(newUser));
+
+    // go to dashboard with email as param
+    navigate(`/dashboard/${encodeURIComponent(email)}`);
   };
 
   return (
-    <div className="login-container">
-      <h2 className="login-title">Welcome Back!</h2>
-      <p className="login-subtitle">Please login to continue</p>
-
-      <form onSubmit={handleLogin}>
-        <label>Email</label>
-        <input
-          type="email"
-          placeholder="Enter your email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-
-        <label>Password</label>
-        <input
-          type="password"
-          placeholder="Enter your password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-
-        <button className="login-btn" type="submit" disabled={loading}>
-          {loading ? "Logging in..." : "Login"}
-        </button>
-      </form>
-
-      <p className="back-text">
-        Don’t have an account?{" "}
-        <span className="link" onClick={handleGoBack}>
-          Go Back
-        </span>
-      </p>
+    <div>
+      <h1>Login</h1>
+      <input
+        type="text"
+        placeholder="Username"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+      />
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <button onClick={handleLogin}>Login</button>
     </div>
   );
 }
+
+export default Login;

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Dashboard.css";
 
-function Dashboard() {
+function UserDashboard() {
   const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
   const [user, setUser] = useState(null);
@@ -16,38 +16,12 @@ function Dashboard() {
     }
     setUser(current);
 
-    // get purchases for this user (foreign key: email)
+    // fetch purchases for this user
     const allUsers = JSON.parse(localStorage.getItem("allUsers")) || {};
     const userData = allUsers[current.email] || {};
     setCourses(userData.purchasedCourses || []);
   }, [navigate]);
 
-  // Add course for this user only
-  const addCourse = (newCourse) => {
-    if (!user) return;
-    const allUsers = JSON.parse(localStorage.getItem("allUsers")) || {};
-    const userData = allUsers[user.email] || { ...user, purchasedCourses: [] };
-
-    const exists = userData.purchasedCourses.some((c) => c.id === newCourse.id);
-    if (!exists) {
-      userData.purchasedCourses.push({
-        ...newCourse,
-        purchaseDate: new Date().toISOString().split("T")[0],
-        modules: [
-          { title: "Introduction", duration: "15m", topic: "Course overview", completed: false },
-          { title: "Module 1", duration: "1h", topic: "Getting started", completed: false },
-        ],
-      });
-
-      // save updates
-      allUsers[user.email] = userData;
-      localStorage.setItem("allUsers", JSON.stringify(allUsers));
-      localStorage.setItem("currentUser", JSON.stringify(userData));
-      setCourses(userData.purchasedCourses);
-    }
-  };
-
-  // Toggle module completion
   const handleToggleModule = (courseId, moduleIdx) => {
     if (!user) return;
     const allUsers = JSON.parse(localStorage.getItem("allUsers")) || {};
@@ -83,7 +57,7 @@ function Dashboard() {
         <h1>👋 Welcome, {user?.username || "Student"}</h1>
         <div>
           <button onClick={() => navigate("/")} style={{ padding: "0.5rem 1rem", marginRight: "0.5rem" }}>
-            Browse Courses
+            Browse More Courses
           </button>
           <button onClick={handleLogout} style={{ padding: "0.5rem 1rem" }}>
             Logout
@@ -91,8 +65,10 @@ function Dashboard() {
         </div>
       </div>
 
+      <h2 style={{ marginTop: "20px" }}>📦 Your Purchased Courses</h2>
+
       {courses.length === 0 ? (
-        <p>No courses purchased yet.</p>
+        <p>You haven’t purchased any courses yet.</p>
       ) : (
         courses.map((course) => {
           const total = course.modules.length;
@@ -147,4 +123,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default UserDashboard;

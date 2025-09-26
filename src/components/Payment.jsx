@@ -1,104 +1,136 @@
-// src/components/Payment.jsx
-import { useParams, useNavigate } from "react-router-dom";
-import courses from "../data/courses";
-import "./Payment.css";
-
-// Example: get current user - replace with your auth/user context
-const getCurrentUser = () => {
-  // 1) Replace with your real auth/context call, e.g. useAuth().user
-  // 2) Fallback example using a name from your app (change as needed)
-  return { id: 1, username: "lokith", displayName: "Lokith" };
-};
+import React, { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import './Payment.css';
 
 function Payment() {
-  const { courseId } = useParams();
   const navigate = useNavigate();
-  const course = courses.find((c) => String(c.id) === String(courseId));
-  const user = getCurrentUser();
+  const location = useLocation();
+  const course = location.state?.course;
+
+  const [cardNumber, setCardNumber] = useState('');
+  const [expiry, setExpiry] = useState('');
+  const [cvv, setCvv] = useState('');
+  const [name, setName] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   if (!course) {
     return (
-      <div>
-        <h2>Course not found!</h2>
+      <div className="payment-container">
+        <h2>Course not found</h2>
+        <button onClick={() => navigate('/')}>Back to Courses</button>
       </div>
     );
   }
 
-  const purchasesKey = `purchases_${user.username || "guest"}`;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
 
-  const handlePayment = (method) => {
-    // TODO: replace this with real payment flow -> on success do the next steps
-    alert(`You selected ${method} to pay for ${course.title} ($${course.price.toFixed(2)})`);
-
-    // --- Build purchasedCourse with purchaseDate ---
-    const purchasedCourse = {
-      ...course,
-      purchaseDate: new Date().toISOString(),
-    };
-
-    // --- Save to localStorage (dedupe) so Dashboard can read it ---
-    try {
-      const raw = localStorage.getItem(purchasesKey);
-      const prev = raw ? JSON.parse(raw) : [];
-      // ensure array
-      const prevArr = Array.isArray(prev) ? prev : [];
-
-      const exists = prevArr.some((c) => String(c.id) === String(purchasedCourse.id));
-      const updated = exists ? prevArr : [...prevArr, purchasedCourse];
-
-      localStorage.setItem(purchasesKey, JSON.stringify(updated));
-    } catch (e) {
-      console.warn("localStorage save error:", e);
+    if (!cardNumber || !expiry || !cvv || !name) {
+      setError('Please fill in all fields');
+      setLoading(false);
+      return;
     }
 
-    // (A) Navigate to dashboard using username param and pass state
-    navigate(`/dashboard/${encodeURIComponent(user.username)}`, {
-      state: { purchasedCourse, user },
-      replace: true, // optional: replace so refresh won't re-post state
-    });
+    setTimeout(() => {
+      setLoading(false);
 
-    // --- OR alternative: navigate("/dashboard", { state: { user, purchasedCourse: course } });
-    // (we used username route above to match your App.jsx)
+      // ✅ Save purchased course to user in localStorage
+      const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+      if (currentUser) {
+        const allUsers = JSON.parse(localStorage.getItem("allUsers")) || {};
+        const userData = allUsers[currentUser.email] || { ...currentUser, purchasedCourses: [] };
+
+        // avoid duplicates
+        const exists = userData.purchasedCourses?.some(c => c.id === course.id);
+        if (!exists) {
+          userData.purchasedCourses = [
+            ...(userData.purchasedCourses || []),
+            {
+              ...course,
+              purchaseDate: new Date().toISOString().split("T")[0],
+              modules: [
+                { title: "Introduction", duration: "15m", topic: "Course overview", completed: false },
+                { title: "Module 1", duration: "1h", topic: "Getting started", completed: false }
+              ]
+            }
+          ];
+        }
+
+        // save back
+        allUsers[currentUser.email] = userData;
+        localStorage.setItem("allUsers", JSON.stringify(allUsers));
+        localStorage.setItem("currentUser", JSON.stringify(userData));
+      }
+
+      // ✅ Redirect to user dashboard
+      navigate('/dashboard/user');
+    }, 2000);
   };
 
   return (
     <div className="payment-container">
-      <button onClick={() => navigate(-1)} style={{ marginBottom: "1rem" }}>
-        ← Go Back
-      </button>
-
-      <h1>Payment for: {course.title}</h1>
-      <p>
-        Price to pay: <strong>${course.price.toFixed(2)}</strong>
-      </p>
-
-      <h3>Select a Payment Method:</h3>
-      <ul className="payment-methods">
-        <li>
-          <button className="payment-button credit-card" onClick={() => handlePayment("Credit Card")}>
-            <img src="https://cdn-icons-png.flaticon.com/512/217/217425.png" alt="Credit Card" />
-            Credit Card
-          </button>
-        </li>
-        <li>
-          <button className="payment-button paypal" onClick={() => handlePayment("PayPal")}>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal" />
-            PayPal
-          </button>
-        </li>
-        <li>
-          <button className="payment-button google-pay" onClick={() => handlePayment("Google Pay")}>
-            <img src="/Gpay.avif" alt="Google Pay" />
-            Google Pay
-          </button>
-        </li>
-        <li>
-          <button className="payment-button upi" onClick={() => handlePayment("UPI")}>
-            <img src="/upi.webp" alt="UPI" />
-            UPI
-          </button>
-        </li>
-      </ul>
+      <h2>Complete Your Purchase</h2>
+      <div className="course-summary">
+        <h3>{course.title}</h3>
+        <p>Instructor: {course.instructor}</p>
+        <p>Price: ${course.price.toFixed(2)}</p>
+      </div>
+      
+      <form onSubmit={handleSubmit} className="payment-form">
+        <div className="form-group">
+          <label>Card Number</label>
+          <input
+            type="text"
+            value={cardNumber}
+            onChange={(e) => setCardNumber(e.target.value)}
+            placeholder="1234 5678 9012 3456"
+            maxLength="19"
+          />
+        </div>
+        
+        <div className="form-row">
+          <div className="form-group">
+            <label>Expiry Date</label>
+            <input
+              type="text"
+              value={expiry}
+              onChange={(e) => setExpiry(e.target.value)}
+              placeholder="MM/YY"
+              maxLength="5"
+            />
+          </div>
+          
+          <div className="form-group">
+            <label>CVV</label>
+            <input
+              type="text"
+              value={cvv}
+              onChange={(e) => setCvv(e.target.value)}
+              placeholder="123"
+              maxLength="3"
+            />
+          </div>
+        </div>
+        
+        <div className="form-group">
+          <label>Cardholder Name</label>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="John Doe"
+          />
+        </div>
+        
+        {error && <div className="error-message">{error}</div>}
+        
+        <button type="submit" className="pay-button" disabled={loading}>
+          {loading ? 'Processing...' : `Pay $${course.price.toFixed(2)}`}
+        </button>
+      </form>
     </div>
   );
 }
